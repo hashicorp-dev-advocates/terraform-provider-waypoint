@@ -38,7 +38,7 @@ func main() {
 		// TODO: update this string with the full name of your provider as used in your configs
 		ProviderAddr: "registry.terraform.io/hashicorp/scaffolding",
 
-		ProviderFunc: provider.New(version),
+		ProviderFunc: provider.Provider,
 	}
 
 	plugin.Serve(opts)

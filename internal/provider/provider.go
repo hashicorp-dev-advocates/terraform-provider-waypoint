@@ -7,51 +7,40 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-func init() {
-	// Set descriptions to support markdown syntax, this will be used in document generation
-	// and the language server.
-	schema.DescriptionKind = schema.StringMarkdown
+// TerraformProviderProductUserAgent is included in the User-Agent header for
+// any API requests made by the provider.
+const TerraformProviderProductUserAgent = "terraform-provider-fastly"
 
-	// Customize the content of descriptions when output. For example you can add defaults on
-	// to the exported descriptions if present.
-	// schema.SchemaDescriptionBuilder = func(s *schema.Schema) string {
-	// 	desc := s.Description
-	// 	if s.Default != nil {
-	// 		desc += fmt.Sprintf(" Defaults to `%v`.", s.Default)
-	// 	}
-	// 	return strings.TrimSpace(desc)
-	// }
-}
+// Provider returns a *schema.Provider.
+func Provider() *schema.Provider {
+	provider := &schema.Provider{
+		Schema: map[string]*schema.Schema{
+			"token": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("WAYPOINT_TOKEN", nil),
+				Description: "Waypoint token to authenticate to Waypoint server",
+			},
+			"waypoint_addr": {
+				Type:        schema.TypeString,
+				Optional:    true,
+				DefaultFunc: schema.EnvDefaultFunc("WAYPOINT_ADDR", nil),
+				Description: "Waypoint server address",
+			},
+		},
+		DataSourcesMap: map[string]*schema.Resource{
+			"waypoint_project": dataSourceProject(),
+		},
+		ResourcesMap: map[string]*schema.Resource{},
+	}
 
-func New(version string) func() *schema.Provider {
-	return func() *schema.Provider {
-		p := &schema.Provider{
-			DataSourcesMap: map[string]*schema.Resource{
-				"scaffolding_data_source": dataSourceScaffolding(),
-			},
-			ResourcesMap: map[string]*schema.Resource{
-				"scaffolding_resource": resourceScaffolding(),
-			},
+	provider.ConfigureContextFunc = func(_ context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
+		config := Config{
+			Token:        d.Get("token").(string),
+			WaypointAddr: d.Get("waypoint_addr").(string),
 		}
-
-		p.ConfigureContextFunc = configure(version, p)
-
-		return p
+		return config.Client()
 	}
-}
 
-type apiClient struct {
-	// Add whatever fields, client or connection info, etc. here
-	// you would need to setup to communicate with the upstream
-	// API.
-}
-
-func configure(version string, p *schema.Provider) func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-	return func(context.Context, *schema.ResourceData) (interface{}, diag.Diagnostics) {
-		// Setup a User-Agent for your API client (replace the provider name for yours):
-		// userAgent := p.UserAgent("terraform-provider-scaffolding", version)
-		// TODO: myClient.UserAgent = userAgent
-
-		return &apiClient{}, nil
-	}
+	return provider
 }
