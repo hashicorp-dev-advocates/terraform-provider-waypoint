@@ -18,7 +18,7 @@ package provider
 //				Config: testAccResourceScaffolding,
 //				Check: resource.ComposeTestCheckFunc(
 //					resource.TestMatchResourceAttr(
-//						"scaffolding_resource.foo", "sample_attribute", regexp.MustCompile("^ba")),
+//						"project_resource.foo", "sample_attribute", regexp.MustCompile("^ba")),
 //				),
 //			},
 //		},
@@ -26,7 +26,7 @@ package provider
 //}
 //
 //const testAccResourceScaffolding = `
-//resource "scaffolding_resource" "foo" {
+//resource "project_resource" "foo" {
 //  sample_attribute = "bar"
 //}
 //`
