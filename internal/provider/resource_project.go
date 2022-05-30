@@ -2,7 +2,6 @@ package provider
 
 import (
 	"context"
-	"fmt"
 	"time"
 
 	"github.com/hashicorp-dev-advocates/waypoint-client/pkg/client"
@@ -57,8 +56,8 @@ func resourceProject() *schema.Resource {
 							Type:     schema.TypeBool,
 							Optional: true,
 						},
-						"data_source_poll_interval": &schema.Schema{
-							Type:     schema.TypeString,
+						"data_source_poll_interval_seconds": &schema.Schema{
+							Type:     schema.TypeInt,
 							Optional: true,
 						},
 						"file_change_signal": &schema.Schema{
@@ -120,8 +119,9 @@ func resourceProject() *schema.Resource {
 
 func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
-	var diags diag.Diagnostics
 	wp := m.(*WaypointClient).conn
+
+	projectConf := client.DefaultProjectConfig()
 
 	// Git configuration for Waypoint project
 	var gitConfig *client.Git
@@ -192,7 +192,6 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 	// Project config for request
 	projectName := d.Get("project_name").(string)
 	d.SetId(projectName)
-	projectConf := client.DefaultProjectConfig()
 	projectConf.Name = d.Get("project_name").(string)
 	projectConf.RemoteRunnersEnabled = d.Get("remote_runners_enabled").(bool)
 
@@ -200,13 +199,8 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 		projectConf.FileChangeSignal = fileChangeSignal
 	}
 
-	if dataSourcePollInterval, ok := dataSourceSlice["data_source_poll_interval"].(string); !ok {
-		gpi, err := time.ParseDuration(dataSourcePollInterval)
-		if err != nil {
-			return diag.FromErr(fmt.Errorf("please specify data_source_poll_interval as Go duration string. E.g 30s, 5m: %s", err))
-		}
-
-		projectConf.GitPollInterval = gpi
+	if dataSourcePollInterval, ok := dataSourceSlice["data_source_poll_interval_seconds"].(int); ok {
+		projectConf.GitPollInterval = time.Duration(dataSourcePollInterval) * time.Second
 	}
 
 	_, err := wp.UpsertProject(context.TODO(), projectConf, gitConfig, variableList)
@@ -220,12 +214,10 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 	// for more information
 	tflog.Trace(ctx, "created a resource")
 
-	return diags
+	return resourceScaffoldingRead(ctx, d, m)
 }
 
 func resourceScaffoldingRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	var diags diag.Diagnostics
-
 	client := m.(*WaypointClient).conn
 
 	projectName := d.Get("project_name").(string)
@@ -234,30 +226,33 @@ func resourceScaffoldingRead(ctx context.Context, d *schema.ResourceData, m inte
 		return diag.Errorf("Error retrieving the %s project", projectName)
 	}
 
-	applications := flattenApplications(project.Applications)
-	variables := flattenVariables(project.Variables)
+	//applications := flattenApplications(project.Applications)
+	//variables := flattenVariables(project.Variables)
 	d.SetId(project.Name)
 
-	d.Set("applications", applications)
-	d.Set("data_source_git_url", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Url)
-	d.Set("data_source_git_path", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Path)
-	d.Set("data_source_git_ref", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Ref)
-	d.Set("data_source_git_ignore_changes_outside_path",
-		project.DataSource.Source.(*gen.Job_DataSource_Git).Git.IgnoreChangesOutsidePath)
-	d.Set("variables", variables)
 	d.Set("remote_runners_enabled", project.RemoteEnabled)
-	d.Set("file_change_signal", project.FileChangeSignal)
 
-	d.Set("data_source_poll_enabled", project.DataSourcePoll.Enabled)
-	if project.DataSourcePoll.Enabled == true {
-		d.Set("data_source_poll_interval", project.DataSourcePoll.Interval)
-	}
+	//d.Set("applications", applications)
+	//d.Set("data_source_git_url", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Url)
+	//d.Set("data_source_git_path", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Path)
+	//d.Set("data_source_git_ref", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Ref)
+	//d.Set("data_source_git_ignore_changes_outside_path",
+	//	project.DataSource.Source.(*gen.Job_DataSource_Git).Git.IgnoreChangesOutsidePath)
+	//d.Set("variables", variables)
+	//d.Set("file_change_signal", project.FileChangeSignal)
 
-	dataSourceSlice := map[string]interface{}{}
-	dataSourceSlice["data_source_poll_interval"] = project.DataSourcePoll.Interval
-	d.Set("data_source_git", dataSourceSlice)
+	dataSourceGitSlice := map[string]interface{}{}
+	dataSourceGitSlice["data_source_git_url"] = project.DataSource.GetGit().Url
+	dataSourceGitSlice["data_source_git_path"] = project.DataSource.GetGit().Path
+	dataSourceGitSlice["data_source_git_ref"] = project.DataSource.GetGit().Ref
+	dataSourceGitSlice["file_change_signal"] = project.FileChangeSignal
 
-	return diags
+	dpi, _ := time.ParseDuration(project.DataSourcePoll.Interval)
+	dataSourceGitSlice["data_source_poll_interval_seconds"] = dpi / time.Second
+
+	d.Set("data_source_git", []interface{}{dataSourceGitSlice})
+
+	return nil
 }
 
 //func resourceScaffoldingUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
