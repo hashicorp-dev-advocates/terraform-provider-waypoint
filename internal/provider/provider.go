@@ -9,7 +9,7 @@ import (
 
 // TerraformProviderProductUserAgent is included in the User-Agent header for
 // any API requests made by the provider.
-const TerraformProviderProductUserAgent = "terraform-provider-fastly"
+const TerraformProviderProductUserAgent = "terraform-provider-waypoint"
 
 // Provider returns a *schema.Provider.
 func Provider() *schema.Provider {

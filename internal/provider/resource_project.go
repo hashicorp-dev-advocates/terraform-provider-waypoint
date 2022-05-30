@@ -3,12 +3,13 @@ package provider
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/hashicorp-dev-advocates/waypoint-client/pkg/client"
 	gen "github.com/hashicorp-dev-advocates/waypoint-client/pkg/waypoint"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/diag"
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
-	"time"
 )
 
 func resourceProject() *schema.Resource {
@@ -128,6 +129,9 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 	authBasicList := d.Get("git_auth_basic").([]interface{})
 	authSshList := d.Get("git_auth_ssh").([]interface{})
 
+	dataSourceList := d.Get("data_source_git").([]interface{})
+	dataSourceSlice := dataSourceList[0].(map[string]interface{})
+
 	if len(authBasicList) > 0 {
 		var auth *client.GitAuthBasic
 
@@ -139,9 +143,6 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 			Username: username.(string),
 			Password: password.(string),
 		}
-
-		dataSourceList := d.Get("data_source_git").([]interface{})
-		dataSourceSlice := dataSourceList[0].(map[string]interface{})
 
 		gitConfig = &client.Git{
 			Url:                      dataSourceSlice["data_source_git_url"].(string),
@@ -165,9 +166,6 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 			PrivateKeyPem: []byte(sshPrivateKey.(string)),
 			Password:      passphrase.(string),
 		}
-
-		dataSourceList := d.Get("data_source_git").([]interface{})
-		dataSourceSlice := dataSourceList[0].(map[string]interface{})
 
 		gitConfig = &client.Git{
 			Url:                      dataSourceSlice["data_source_git_url"].(string),
@@ -197,27 +195,19 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 	projectConf := client.DefaultProjectConfig()
 	projectConf.Name = d.Get("project_name").(string)
 	projectConf.RemoteRunnersEnabled = d.Get("remote_runners_enabled").(bool)
-	fileChangeSignal := d.Get("file_change_signal")
-	if fileChangeSignal != nil {
-		projectConf.FileChangeSignal = d.Get("file_change_signal").(string)
+
+	if fileChangeSignal, ok := dataSourceSlice["file_change_signal"].(string); ok {
+		projectConf.FileChangeSignal = fileChangeSignal
 	}
 
-	if dataSourcePollInterval, ok := d.Get("data_source_poll_interval").(string); !ok {
-
-		//panic("test")
+	if dataSourcePollInterval, ok := dataSourceSlice["data_source_poll_interval"].(string); !ok {
 		gpi, err := time.ParseDuration(dataSourcePollInterval)
 		if err != nil {
 			return diag.FromErr(fmt.Errorf("please specify data_source_poll_interval as Go duration string. E.g 30s, 5m: %s", err))
 		}
+
 		projectConf.GitPollInterval = gpi
-
 	}
-
-	//dataSourcePollInterval := d.Get("data_source_poll_interval")
-	//if dataSourcePollInterval == nil {
-	//	//panic("test")
-	//	fmt.Printf("%#v", dataSourcePollInterval)
-	//}
 
 	_, err := wp.UpsertProject(context.TODO(), projectConf, gitConfig, variableList)
 
@@ -262,6 +252,10 @@ func resourceScaffoldingRead(ctx context.Context, d *schema.ResourceData, m inte
 	if project.DataSourcePoll.Enabled == true {
 		d.Set("data_source_poll_interval", project.DataSourcePoll.Interval)
 	}
+
+	dataSourceSlice := map[string]interface{}{}
+	dataSourceSlice["data_source_poll_interval"] = project.DataSourcePoll.Interval
+	d.Set("data_source_git", dataSourceSlice)
 
 	return diags
 }
