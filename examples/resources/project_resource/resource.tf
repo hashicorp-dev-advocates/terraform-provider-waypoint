@@ -25,7 +25,7 @@ resource "waypoint_project" "example" {
     git_path = "docker/go" # Path in repo for waypoint.hcl file
     git_ref  = "HEAD" # This can be a branch name, a tag name, or a fully qualified Git ref such as refs/pull/1014
     file_change_signal = "some-signal"
-    data_source_poll_interval = "90s"
+    git_poll_interval_seconds = 15
   }
   # Input variables for the Waypoint project - map with k/v pairs
   project_variables = {
