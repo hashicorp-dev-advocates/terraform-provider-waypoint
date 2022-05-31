@@ -46,7 +46,7 @@ func TestAccWaypointProjectBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"waypoint_project.test", "data_source_git.0.file_change_signal", "some-signal"),
 					resource.TestCheckResourceAttr(
-						"waypoint_project.test", "data_source_git.0.data_source_poll_interval_seconds", "90"),
+						"waypoint_project.test", "data_source_git.0.git_poll_interval_seconds", "90"),
 				),
 			},
 		},
@@ -126,7 +126,7 @@ resource "waypoint_project" "test" {
     git_path = "docker/go"
     git_ref  = "HEAD"
     file_change_signal = "some-signal"
-    data_source_poll_interval_seconds = 90
+    git_poll_interval_seconds = 90
   }
 
   project_variables = {
