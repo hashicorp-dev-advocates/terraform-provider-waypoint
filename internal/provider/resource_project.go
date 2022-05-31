@@ -40,15 +40,15 @@ func resourceProject() *schema.Resource {
 				Required: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
-						"data_source_git_url": &schema.Schema{
+						"git_url": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"data_source_git_path": &schema.Schema{
+						"git_path": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
 						},
-						"data_source_git_ref": &schema.Schema{
+						"git_ref": &schema.Schema{
 							Type:     schema.TypeString,
 							Optional: true,
 						},
@@ -145,10 +145,10 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 		}
 
 		gitConfig = &client.Git{
-			Url:                      dataSourceSlice["data_source_git_url"].(string),
-			Path:                     dataSourceSlice["data_source_git_path"].(string),
+			Url:                      dataSourceSlice["git_url"].(string),
+			Path:                     dataSourceSlice["git_path"].(string),
 			IgnoreChangesOutsidePath: dataSourceSlice["data_source_git_ignore_changes_outside_path"].(bool),
-			Ref:                      dataSourceSlice["data_source_git_ref"].(string),
+			Ref:                      dataSourceSlice["git_ref"].(string),
 			Auth:                     auth,
 		}
 	} else if len(authSshList) > 0 {
@@ -168,10 +168,10 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 		}
 
 		gitConfig = &client.Git{
-			Url:                      dataSourceSlice["data_source_git_url"].(string),
-			Path:                     dataSourceSlice["data_source_git_path"].(string),
+			Url:                      dataSourceSlice["git_url"].(string),
+			Path:                     dataSourceSlice["git_path"].(string),
 			IgnoreChangesOutsidePath: dataSourceSlice["data_source_git_ignore_changes_outside_path"].(bool),
-			Ref:                      dataSourceSlice["data_source_git_ref"].(string),
+			Ref:                      dataSourceSlice["git_ref"].(string),
 			Auth:                     auth,
 		}
 
@@ -233,18 +233,18 @@ func resourceScaffoldingRead(ctx context.Context, d *schema.ResourceData, m inte
 	d.Set("remote_runners_enabled", project.RemoteEnabled)
 
 	//d.Set("applications", applications)
-	//d.Set("data_source_git_url", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Url)
-	//d.Set("data_source_git_path", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Path)
-	//d.Set("data_source_git_ref", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Ref)
+	//d.Set("git_url", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Url)
+	//d.Set("git_path", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Path)
+	//d.Set("git_ref", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Ref)
 	//d.Set("data_source_git_ignore_changes_outside_path",
 	//	project.DataSource.Source.(*gen.Job_DataSource_Git).Git.IgnoreChangesOutsidePath)
 	//d.Set("variables", variables)
 	//d.Set("file_change_signal", project.FileChangeSignal)
 
 	dataSourceGitSlice := map[string]interface{}{}
-	dataSourceGitSlice["data_source_git_url"] = project.DataSource.GetGit().Url
-	dataSourceGitSlice["data_source_git_path"] = project.DataSource.GetGit().Path
-	dataSourceGitSlice["data_source_git_ref"] = project.DataSource.GetGit().Ref
+	dataSourceGitSlice["git_url"] = project.DataSource.GetGit().Url
+	dataSourceGitSlice["git_path"] = project.DataSource.GetGit().Path
+	dataSourceGitSlice["git_ref"] = project.DataSource.GetGit().Ref
 	dataSourceGitSlice["file_change_signal"] = project.FileChangeSignal
 
 	dpi, _ := time.ParseDuration(project.DataSourcePoll.Interval)
