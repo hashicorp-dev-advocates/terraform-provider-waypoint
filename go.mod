@@ -70,3 +70,5 @@ require (
 	google.golang.org/grpc v1.45.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 )
+
+//replace github.com/hashicorp-dev-advocates/waypoint-client => ../waypoint-client
