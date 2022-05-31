@@ -21,9 +21,9 @@ resource "waypoint_project" "example" {
   remote_runners_enabled = true # Defaults to `false`
   # Data source stanza for git config - map of below keys
   data_source_git {
-    data_source_git_url  = "https://github.com/hashicorp/waypoint-examples" # Must be ssh url if using `git_auth_ssh`
-    data_source_git_path = "docker/go" # Path in repo for waypoint.hcl file
-    data_source_git_ref  = "HEAD" # This can be a branch name, a tag name, or a fully qualified Git ref such as refs/pull/1014
+    git_url  = "https://github.com/hashicorp/waypoint-examples" # Must be ssh url if using `git_auth_ssh`
+    git_path = "docker/go" # Path in repo for waypoint.hcl file
+    git_ref  = "HEAD" # This can be a branch name, a tag name, or a fully qualified Git ref such as refs/pull/1014
     file_change_signal = "some-signal"
     data_source_poll_interval = "90s"
   }

@@ -38,15 +38,15 @@ func TestAccWaypointProjectBasic(t *testing.T) {
 					resource.TestCheckResourceAttr(
 						"waypoint_project.test", "remote_runners_enabled", "true"),
 					resource.TestCheckResourceAttr(
-						"waypoint_project.test", "data_source_git.0.data_source_git_url", "https://github.com/hashicorp/waypoint-examples"),
+						"waypoint_project.test", "data_source_git.0.git_url", "https://github.com/hashicorp/waypoint-examples"),
 					resource.TestCheckResourceAttr(
-						"waypoint_project.test", "data_source_git.0.data_source_git_path", "docker/go"),
+						"waypoint_project.test", "data_source_git.0.git_path", "docker/go"),
 					resource.TestCheckResourceAttr(
-						"waypoint_project.test", "data_source_git.0.data_source_git_ref", "HEAD"),
+						"waypoint_project.test", "data_source_git.0.git_ref", "HEAD"),
 					resource.TestCheckResourceAttr(
 						"waypoint_project.test", "data_source_git.0.file_change_signal", "some-signal"),
 					resource.TestCheckResourceAttr(
-						"waypoint_project.test", "data_source_git.0.data_source_poll_interval_seconds", "90"),
+						"waypoint_project.test", "data_source_git.0.git_poll_interval_seconds", "90"),
 				),
 			},
 		},
@@ -122,11 +122,11 @@ resource "waypoint_project" "test" {
   remote_runners_enabled = true
   
 	data_source_git {
-    data_source_git_url  = "https://github.com/hashicorp/waypoint-examples"
-    data_source_git_path = "docker/go"
-    data_source_git_ref  = "HEAD"
+    git_url  = "https://github.com/hashicorp/waypoint-examples"
+    git_path = "docker/go"
+    git_ref  = "HEAD"
     file_change_signal = "some-signal"
-    data_source_poll_interval_seconds = 90
+    git_poll_interval_seconds = 90
   }
 
   project_variables = {
