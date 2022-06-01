@@ -82,38 +82,6 @@ func testAccCheckProjectDestroy(s *terraform.State) error {
 	return nil
 }
 
-//func testDataSourceGit() resource.TestCheckFunc {
-//	return func(s *terraform.State) error {
-//		for _, rs := range s.RootModule().Resources {
-//			if rs.Type != "waypoint_project" {
-//				continue
-//			}
-//
-//			// create a waypoint client connection
-//			conn := waypointProvider.Meta().(*WaypointClient).conn
-//
-//			// get project name from resource
-//			projName := rs.Primary.Attributes["project_name"]
-//			// fetch the project from waypoint
-//			proj, err := conn.GetProject(context.TODO(), projName)
-//			if err != nil {
-//				return fmt.Errorf("unable to get project from waypoint")
-//			}
-//
-//			// check that the poll interval is set
-//			terraformDuration, _ := time.ParseDuration(rs.Primary.Attributes["data_source_git.0.data_source_poll_interval"])
-//			projDuration, _ := time.ParseDuration(proj.DataSourcePoll.GetInterval())
-//			if projDuration != terraformDuration {
-//				return fmt.Errorf("poll Interval not set, expected %d, got %d", terraformDuration, projDuration)
-//			}
-//
-//			return nil
-//		}
-//
-//		return nil
-//	}
-//}
-
 func testAccProjectBasic(name string) string {
 	return fmt.Sprintf(`
 resource "waypoint_project" "test" {

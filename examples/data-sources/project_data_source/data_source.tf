@@ -46,6 +46,9 @@ output "njack_ssh" {
   sensitive = true
 }
 
+output "asps" {
+  value = data.waypoint_project.njack.app_status_poll_seconds
+}
 #output "url" {
 #  value = data.waypoint_project.njack.data_source_git
 #}

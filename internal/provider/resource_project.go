@@ -81,20 +81,23 @@ func resourceProject() *schema.Resource {
 				Description: "Enable remote runners for project",
 			},
 			"git_auth_basic": &schema.Schema{
-				Type:      schema.TypeList,
-				Optional:  true,
-				Sensitive: true,
-				MaxItems:  1,
+				Type:        schema.TypeList,
+				Optional:    true,
+				Description: "Basic authentication details for Git consisting of `username` and `password`",
+				Sensitive:   true,
+				MaxItems:    1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"username": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Description: "Git username",
 						},
 						"password": &schema.Schema{
-							Type:      schema.TypeString,
-							Required:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Sensitive:   true,
+							Description: "Git password",
 						},
 					},
 				},
@@ -105,28 +108,33 @@ func resourceProject() *schema.Resource {
 				Sensitive:     true,
 				ConflictsWith: []string{"git_auth_basic"},
 				MaxItems:      1,
+				Description:   "SSH authentication details for Git",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"git_user": &schema.Schema{
-							Type:     schema.TypeString,
-							Required: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Git user associated with private key",
 						},
 						"passphrase": &schema.Schema{
-							Type:      schema.TypeString,
-							Optional:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Sensitive:   true,
+							Description: "Passphrase to use with private key",
 						},
 						"ssh_private_key": &schema.Schema{
-							Type:      schema.TypeString,
-							Required:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Required:    true,
+							Sensitive:   true,
+							Description: "Private key to authenticate to Git",
 						},
 					},
 				},
 			},
 			"app_status_poll_seconds": &schema.Schema{
-				Type:     schema.TypeInt,
-				Optional: true,
+				Type:        schema.TypeInt,
+				Optional:    true,
+				Description: "Application status poll interval in seconds",
 			},
 		},
 	}
@@ -281,23 +289,19 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, m interfac
 		d.Set("git_auth_ssh", []interface{}{gitAuthSshSlice})
 	}
 
-	//asps, _ := time.ParseDuration(project.StatusReportPoll.Interval)
-	//d.Set("app_status_poll_seconds", asps/time.Second)
+	if project.StatusReportPoll != nil {
+		asps := project.StatusReportPoll.Interval
+		aspsParse, _ := time.ParseDuration(asps)
+		d.Set("app_status_poll_seconds", aspsParse/time.Second)
+	}
 
 	return nil
 }
 
 func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	// use the meta value to retrieve your client from the provider configure method
-	// client := meta.(*apiClient)
 
 	var diags diag.Diagnostics
 	wp := m.(*WaypointClient).conn
-
-	//auth := gen.GitAuthBasic{
-	//	Username: "",
-	//	Password: "",
-	//}
 
 	gc := client.Git{
 		Url:                      "RESOURCE DELETED",
@@ -324,9 +328,4 @@ func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, m interf
 	tflog.Trace(ctx, "created a resource")
 
 	return diags
-
-}
-
-func gitAuthBasicMap() {
-
 }

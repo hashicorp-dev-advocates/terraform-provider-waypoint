@@ -89,50 +89,59 @@ func dataSourceProject() *schema.Resource {
 				},
 			},
 			"remote_runners_enabled": &schema.Schema{
-				Type:     schema.TypeBool,
-				Computed: true,
+				Type:        schema.TypeBool,
+				Computed:    true,
+				Description: "Remote runners enabled for the project",
 			},
 			"app_status_poll_seconds": &schema.Schema{
-				Type:     schema.TypeInt,
-				Computed: true,
+				Type:        schema.TypeInt,
+				Computed:    true,
+				Description: "Application status poll interval in seconds",
 			},
 			"git_auth_basic": &schema.Schema{
-				Type:      schema.TypeList,
-				Computed:  true,
-				Sensitive: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "Basic authentication details for Git",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"username": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Git username",
 						},
 						"password": &schema.Schema{
-							Type:      schema.TypeString,
-							Computed:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+							Description: "Git password",
 						},
 					},
 				},
 			},
 			"git_auth_ssh": &schema.Schema{
-				Type:      schema.TypeList,
-				Computed:  true,
-				Sensitive: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Sensitive:   true,
+				Description: "SSH authentication details for Git",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"git_user": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Git user associated with private key",
 						},
 						"passphrase": &schema.Schema{
-							Type:      schema.TypeString,
-							Computed:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+							Description: "Passphrase to use with private key",
 						},
 						"ssh_private_key": &schema.Schema{
-							Type:      schema.TypeString,
-							Computed:  true,
-							Sensitive: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Sensitive:   true,
+							Description: "Private key to authenticate to Git",
 						},
 					},
 				},
@@ -144,33 +153,6 @@ func dataSourceProject() *schema.Resource {
 func dataSourceProjectRead(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 
 	var diags diag.Diagnostics
-
-	//client := m.(*WaypointClient).conn
-	//
-	//projectName := d.Get("project_name").(string)
-	//project, err := client.GetProject(context.TODO(), projectName)
-	//if err != nil {
-	//	return diag.Errorf("Error retrieving the %s project", projectName)
-	//}
-	//
-	//applications := flattenApplications(project.Applications)
-	//variables := flattenVariables(project.Variables)
-	//d.SetId(project.Name)
-	//
-	//d.Set("applications", applications)
-	//d.Set("git_url", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Url)
-	//d.Set("git_path", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Path)
-	//d.Set("git_ref", project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Ref)
-	//d.Set("ignore_changes_outside_path",
-	//	project.DataSource.Source.(*gen.Job_DataSource_Git).Git.IgnoreChangesOutsidePath)
-	//d.Set("variables", variables)
-	//d.Set("remote_runners_enabled", project.RemoteEnabled)
-	//d.Set("file_change_signal", project.FileChangeSignal)
-	//
-	//d.Set("data_source_poll_enabled", project.DataSourcePoll.Enabled)
-	//if project.DataSourcePoll.Enabled == true {
-	//	d.Set("data_source_poll_interval", project.DataSourcePoll.Interval)
-	//}
 
 	resourceProjectRead(context.TODO(), d, m)
 
