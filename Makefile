@@ -10,3 +10,5 @@ build:
 install: build
 	mkdir -p ~/.terraform.d/plugins/local/$(organization)/$(name)/$(version)/$(arch)
 	mv bin/terraform-provider-$(name)_v$(version) ~/.terraform.d/plugins/local/$(organization)/$(name)/$(version)/$(arch)/
+test:
+	go test ./internal/provider -v

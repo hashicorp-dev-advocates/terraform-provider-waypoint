@@ -21,7 +21,7 @@ output "tf_test_apps" {
 }
 
 output "tf_test_variables" {
-  value = data.waypoint_project.tf-test.project_variables
+  value = data.waypoint_project.tf-test.project_variables[0].name
 }
 
 output "tf_test_data_source_git" {

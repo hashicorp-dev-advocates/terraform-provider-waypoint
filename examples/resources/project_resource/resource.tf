@@ -38,6 +38,8 @@ resource "waypoint_project" "example" {
     conference = "HashiConf EU 2022"
   }
 
+
+
   # Git auth basic example stanza - map of below keys
   # Must either be git_auth_basic or git_auth_ssh.
   # Used to configure credentials for Waypoint to authenticate to Git
