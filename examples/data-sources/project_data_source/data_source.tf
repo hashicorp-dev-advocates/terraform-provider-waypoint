@@ -16,14 +16,34 @@ data "waypoint_project" "tf-test" {
   project_name = "tf-test"
 }
 
-output "tf_test_apps" {
-  value = data.waypoint_project.tf-test.applications
+#output "tf_test_apps" {
+#  value = data.waypoint_project.tf-test.applications
+#}
+#
+#output "tf_test_variables" {
+#  value = data.waypoint_project.tf-test.project_variables
+#}
+#
+#output "tf_test_data_source_git" {
+#  value = data.waypoint_project.tf-test.data_source_git
+#}
+#
+#output "app_status_poll" {
+#  value = data.waypoint_project.tf-test.app_status_poll_seconds
+#}
+
+output "git_auth" {
+  value = data.waypoint_project.tf-test.git_auth_ssh
 }
 
-output "tf_test_variables" {
-  value = data.waypoint_project.tf-test.project_variables
+data "waypoint_project" "njack" {
+  project_name = "njack"
 }
 
-output "tf_test_data_source_git" {
-  value = data.waypoint_project.tf-test.data_source_git
+output "njack_ssh" {
+  value = data.waypoint_project.njack.git_auth_basic
 }
+
+#output "url" {
+#  value = data.waypoint_project.njack.data_source_git
+#}

@@ -1,9 +1,9 @@
 module github.com/hashicorp/terraform-provider-scaffolding
 
-go 1.17
+go 1.18
 
 require (
-	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220505094225-72ff4a9c9022
+	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220531105311-7891ba335995
 	github.com/hashicorp/terraform-plugin-docs v0.8.1
 	github.com/hashicorp/terraform-plugin-log v0.4.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.16.0
@@ -70,5 +70,3 @@ require (
 	google.golang.org/grpc v1.45.0 // indirect
 	google.golang.org/protobuf v1.28.0 // indirect
 )
-
-//replace github.com/hashicorp-dev-advocates/waypoint-client => ../waypoint-client

@@ -28,48 +28,57 @@ func resourceProject() *schema.Resource {
 				Description: "The name of the Waypoint project",
 			},
 			"project_variables": &schema.Schema{
-				Type:     schema.TypeMap,
-				Optional: true,
+				Type:        schema.TypeMap,
+				Optional:    true,
+				Description: "List of variables in Key/value pairs associated with the Waypoint Project",
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
 			"data_source_git": &schema.Schema{
-				Type:     schema.TypeList,
-				MaxItems: 1,
-				Required: true,
+				Type:        schema.TypeList,
+				MaxItems:    1,
+				Required:    true,
+				Description: "Configuration of Git repository where waypoint.hcl file is stored",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"git_url": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Url of git repository storing the waypoint.hcl file",
 						},
 						"git_path": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Path in git repository when waypoint.hcl file is stored in a sub-directory",
 						},
 						"git_ref": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Git repository ref containing waypoint.hcl file",
 						},
 						"ignore_changes_outside_path": &schema.Schema{
-							Type:     schema.TypeBool,
-							Optional: true,
+							Type:        schema.TypeBool,
+							Optional:    true,
+							Description: "Whether Waypoint ignores changes outside path storing waypoint.hcl file",
 						},
 						"git_poll_interval_seconds": &schema.Schema{
-							Type:     schema.TypeInt,
-							Optional: true,
+							Type:        schema.TypeInt,
+							Optional:    true,
+							Description: "Interval at which Waypoint should poll git repository for changes",
 						},
 						"file_change_signal": &schema.Schema{
-							Type:     schema.TypeString,
-							Optional: true,
+							Type:        schema.TypeString,
+							Optional:    true,
+							Description: "Indicates signal to be sent to any applications when their config files change.",
 						},
 					},
 				},
 			},
 			"remote_runners_enabled": &schema.Schema{
-				Type:     schema.TypeBool,
-				Optional: true,
+				Type:        schema.TypeBool,
+				Optional:    true,
+				Description: "Enable remote runners for project",
 			},
 			"git_auth_basic": &schema.Schema{
 				Type:     schema.TypeList,
@@ -112,6 +121,10 @@ func resourceProject() *schema.Resource {
 						},
 					},
 				},
+			},
+			"app_status_poll_seconds": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
 			},
 		},
 	}
@@ -195,6 +208,10 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 	projectConf.Name = d.Get("project_name").(string)
 	projectConf.RemoteRunnersEnabled = d.Get("remote_runners_enabled").(bool)
 
+	if appStatusPollSeconds, ok := d.Get("app_status_poll_seconds").(int); ok {
+		projectConf.StatusReportPoll = time.Duration(appStatusPollSeconds) * time.Second
+	}
+
 	if fileChangeSignal, ok := dataSourceSlice["file_change_signal"].(string); ok {
 		projectConf.FileChangeSignal = fileChangeSignal
 	}
@@ -244,18 +261,39 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, m interfac
 
 	dpi, _ := time.ParseDuration(project.DataSourcePoll.Interval)
 	dataSourceGitSlice["git_poll_interval_seconds"] = dpi / time.Second
-
 	d.Set("data_source_git", []interface{}{dataSourceGitSlice})
+
+	gitAuthBasicSlice := map[string]interface{}{}
+	gitAuthSshSlice := map[string]interface{}{}
+
+	gitAuth := project.DataSource.Source.(*gen.Job_DataSource_Git).Git.Auth
+	switch gitAuth.(type) {
+	case *gen.Job_Git_Basic_:
+		gitAuthBasicSlice["username"] = gitAuth.(*gen.Job_Git_Basic_).Basic.Username
+		gitAuthBasicSlice["password"] = gitAuth.(*gen.Job_Git_Basic_).Basic.Password
+		d.Set("git_auth_basic", []interface{}{gitAuthBasicSlice})
+	case *gen.Job_Git_Ssh:
+		gitAuthSshSlice["git_user"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.User
+		gitAuthSshSlice["passphrase"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.Password
+		gitAuthSshSlice["ssh_private_key"] = []byte(gitAuth.(*gen.Job_Git_Ssh).Ssh.PrivateKeyPem)
+		d.Set("git_auth_ssh", []interface{}{gitAuthSshSlice})
+	}
+
+	//if gitAuth != nil {
+	//	if gitAuth == gitAuth.(*gen.Job_Git_Basic_) {
+	//	} else if gitAuth == gitAuth.(*gen.Job_Git_Ssh) {
+	//		gitAuthSshSlice["git_user"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.User
+	//		gitAuthSshSlice["passphrase"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.Password
+	//		gitAuthSshSlice["ssh_private_key"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.PrivateKeyPem
+	//		d.Set("git_auth_ssh", []interface{}{gitAuthSshSlice})
+	//	}
+	//}
+
+	//asps, _ := time.ParseDuration(project.StatusReportPoll.Interval)
+	//d.Set("app_status_poll_seconds", asps/time.Second)
 
 	return nil
 }
-
-//func resourceScaffoldingUpdate(ctx context.Context, d *schema.ResourceData, meta interface{}) diag.Diagnostics {
-//	// use the meta value to retrieve your client from the provider configure method
-//	// client := meta.(*apiClient)
-//
-//	return diag.Errorf("not implemented")
-//}
 
 func resourceProjectDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
 	// use the meta value to retrieve your client from the provider configure method

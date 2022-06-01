@@ -18,8 +18,9 @@ func dataSourceProject() *schema.Resource {
 				Description: "The name of the Waypoint project",
 			},
 			"applications": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Applications associated with the Waypoint project",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": &schema.Schema{
@@ -30,94 +31,69 @@ func dataSourceProject() *schema.Resource {
 				},
 			},
 			"project_variables": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "List of variables in Key/value pairs associated with the Waypoint Project",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"name": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Key of the variable",
 						},
 						"value": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "value of the variable",
 						},
 					},
 				},
 			},
-			//"git_url": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Computed: true,
-			//},
-			//"git_path": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Computed: true,
-			//},
-			//"git_ref": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Computed: true,
-			//},
-			//"ignore_changes_outside_path": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Computed: true,
-			//},
-			//"data_source_poll_enabled": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Computed: true,
-			//},
-			//"data_source_poll_interval": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Computed: true,
-			//},
-			//"remote_runners_enabled": &schema.Schema{
-			//	Type:     schema.TypeBool,
-			//	Computed: true,
-			//},
-			//"file_change_signal": &schema.Schema{
-			//	Type:     schema.TypeString,
-			//	Computed: true,
-			//},
-			//"project_variables": &schema.Schema{
-			//	Type:     schema.TypeMap,
-			//	Computed: true,
-			//	Elem: &schema.Schema{
-			//		Type: schema.TypeString,
-			//	},
-			//},
 			"data_source_git": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:        schema.TypeList,
+				Computed:    true,
+				Description: "Configuration of Git repository where waypoint.hcl file is stored",
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"git_url": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Url of git repository storing the waypoint.hcl file",
 						},
 						"git_path": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Path in git repository when waypoint.hcl file is stored in a sub-directory",
 						},
 						"git_ref": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Git repository ref containing waypoint.hcl file",
 						},
 						"ignore_changes_outside_path": &schema.Schema{
-							Type:     schema.TypeBool,
-							Computed: true,
+							Type:        schema.TypeBool,
+							Computed:    true,
+							Description: "Whether Waypoint ignores changes outside path storing waypoint.hcl file",
 						},
 						"git_poll_interval_seconds": &schema.Schema{
-							Type:     schema.TypeInt,
-							Computed: true,
+							Type:        schema.TypeInt,
+							Computed:    true,
+							Description: "Interval at which Waypoint should poll git repository for changes",
 						},
 						"file_change_signal": &schema.Schema{
-							Type:     schema.TypeString,
-							Computed: true,
+							Type:        schema.TypeString,
+							Computed:    true,
+							Description: "Indicates signal to be sent to any applications when their config files change.",
 						},
 					},
 				},
 			},
 			"remote_runners_enabled": &schema.Schema{
 				Type:     schema.TypeBool,
+				Computed: true,
+			},
+			"app_status_poll_seconds": &schema.Schema{
+				Type:     schema.TypeInt,
 				Computed: true,
 			},
 			"git_auth_basic": &schema.Schema{

@@ -27,6 +27,10 @@ resource "waypoint_project" "example" {
     file_change_signal = "some-signal"
     git_poll_interval_seconds = 15
   }
+
+  app_status_poll_seconds = 12
+
+
   # Input variables for the Waypoint project - map with k/v pairs
   project_variables = {
     name = "rob"
