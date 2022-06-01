@@ -1,9 +1,7 @@
 package waypoint
 
 import (
-	"context"
 	"fmt"
-	"os"
 	"testing"
 
 	sdkacctest "github.com/hashicorp/terraform-plugin-sdk/v2/helper/acctest"
@@ -13,10 +11,6 @@ import (
 )
 
 var providerName = "waypoint"
-
-var providerFactories = map[string]func() (*schema.Provider, error){
-	providerName: func() (*schema.Provider, error) { return Provider(), nil },
-}
 
 // provider that can be used to obtain a waypoint client for acceptance tests
 // this is configured in the testAccPreCheck
@@ -100,23 +94,6 @@ func TestAccWaypointProjectSsh(t *testing.T) {
 			},
 		},
 	})
-}
-
-func testAccPreCheck(t *testing.T) {
-	if os.Getenv("WAYPOINT_TOKEN") == "" {
-		t.Fatal("Please set the environment variable WAYPOINT_TOKEN")
-	}
-
-	if os.Getenv("WAYPOINT_ADDR") == "" {
-		t.Fatal("Please set the environment variable WAYPOINT_ADDR")
-	}
-
-	waypointProvider = Provider()
-
-	err := waypointProvider.Configure(context.Background(), terraform.NewResourceConfigRaw(nil))
-	if err != nil {
-		t.Fatal(err)
-	}
 }
 
 func testAccCheckProjectDestroy(s *terraform.State) error {
