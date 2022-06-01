@@ -97,8 +97,9 @@ func dataSourceProject() *schema.Resource {
 				Computed: true,
 			},
 			"git_auth_basic": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:      schema.TypeList,
+				Computed:  true,
+				Sensitive: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"username": &schema.Schema{
@@ -114,8 +115,9 @@ func dataSourceProject() *schema.Resource {
 				},
 			},
 			"git_auth_ssh": &schema.Schema{
-				Type:     schema.TypeList,
-				Computed: true,
+				Type:      schema.TypeList,
+				Computed:  true,
+				Sensitive: true,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"git_user": &schema.Schema{

@@ -81,9 +81,10 @@ func resourceProject() *schema.Resource {
 				Description: "Enable remote runners for project",
 			},
 			"git_auth_basic": &schema.Schema{
-				Type:     schema.TypeList,
-				Optional: true,
-				MaxItems: 1,
+				Type:      schema.TypeList,
+				Optional:  true,
+				Sensitive: true,
+				MaxItems:  1,
 				Elem: &schema.Resource{
 					Schema: map[string]*schema.Schema{
 						"username": &schema.Schema{
@@ -101,6 +102,7 @@ func resourceProject() *schema.Resource {
 			"git_auth_ssh": &schema.Schema{
 				Type:          schema.TypeList,
 				Optional:      true,
+				Sensitive:     true,
 				ConflictsWith: []string{"git_auth_basic"},
 				MaxItems:      1,
 				Elem: &schema.Resource{
@@ -275,19 +277,9 @@ func resourceProjectRead(ctx context.Context, d *schema.ResourceData, m interfac
 	case *gen.Job_Git_Ssh:
 		gitAuthSshSlice["git_user"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.User
 		gitAuthSshSlice["passphrase"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.Password
-		gitAuthSshSlice["ssh_private_key"] = []byte(gitAuth.(*gen.Job_Git_Ssh).Ssh.PrivateKeyPem)
+		gitAuthSshSlice["ssh_private_key"] = string(gitAuth.(*gen.Job_Git_Ssh).Ssh.PrivateKeyPem)
 		d.Set("git_auth_ssh", []interface{}{gitAuthSshSlice})
 	}
-
-	//if gitAuth != nil {
-	//	if gitAuth == gitAuth.(*gen.Job_Git_Basic_) {
-	//	} else if gitAuth == gitAuth.(*gen.Job_Git_Ssh) {
-	//		gitAuthSshSlice["git_user"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.User
-	//		gitAuthSshSlice["passphrase"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.Password
-	//		gitAuthSshSlice["ssh_private_key"] = gitAuth.(*gen.Job_Git_Ssh).Ssh.PrivateKeyPem
-	//		d.Set("git_auth_ssh", []interface{}{gitAuthSshSlice})
-	//	}
-	//}
 
 	//asps, _ := time.ParseDuration(project.StatusReportPoll.Interval)
 	//d.Set("app_status_poll_seconds", asps/time.Second)
