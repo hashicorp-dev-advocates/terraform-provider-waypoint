@@ -18,9 +18,4 @@ resource "waypoint_project" "example" {
     job        = "dev-advocate"
     conference = "HashiConf EU 2022"
   }
-
-  git_auth_basic {
-    username = "test"
-    password = "test"
-  }
 }

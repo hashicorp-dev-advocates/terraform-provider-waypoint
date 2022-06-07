@@ -198,6 +198,15 @@ func resourceProjectCreate(ctx context.Context, d *schema.ResourceData, m interf
 			Auth:                     auth,
 		}
 
+	} else {
+		gitConfig = &client.Git{
+			Url:                      dataSourceSlice["git_url"].(string),
+			Path:                     dataSourceSlice["git_path"].(string),
+			IgnoreChangesOutsidePath: dataSourceSlice["ignore_changes_outside_path"].(bool),
+			Ref:                      dataSourceSlice["git_ref"].(string),
+			Auth:                     nil,
+		}
+
 	}
 
 	// Project variables configuration
