@@ -3,11 +3,10 @@ module github.com/hashicorp-dev-advocates/terraform-provider-waypoint
 go 1.18
 
 require (
-	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220531105311-7891ba335995
-	github.com/hashicorp/terraform-plugin-docs v0.9.0
-	github.com/hashicorp/terraform-plugin-log v0.4.0
+	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220612142425-929b3070e504
+	github.com/hashicorp/terraform-plugin-docs v0.10.0
+	github.com/hashicorp/terraform-plugin-log v0.4.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
-	github.com/hashicorp/terraform-provider-scaffolding v0.0.0-20220601140206-131d4b06b2bd
 )
 
 require (
@@ -28,7 +27,7 @@ require (
 	github.com/hashicorp/go-checkpoint v0.5.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-cty v1.4.1-0.20200414143053-d3edf31b6320 // indirect
-	github.com/hashicorp/go-hclog v1.2.0 // indirect
+	github.com/hashicorp/go-hclog v1.2.1 // indirect
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/hashicorp/go-plugin v1.4.4 // indirect
 	github.com/hashicorp/go-uuid v1.0.3 // indirect
