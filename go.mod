@@ -4,10 +4,9 @@ go 1.18
 
 require (
 	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220531105311-7891ba335995
-	github.com/hashicorp/terraform-plugin-docs v0.9.0
+	github.com/hashicorp/terraform-plugin-docs v0.10.0
 	github.com/hashicorp/terraform-plugin-log v0.4.0
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
-	github.com/hashicorp/terraform-provider-scaffolding v0.0.0-20220601140206-131d4b06b2bd
 )
 
 require (
