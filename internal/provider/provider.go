@@ -29,10 +29,12 @@ func Provider() *schema.Provider {
 			},
 		},
 		DataSourcesMap: map[string]*schema.Resource{
-			"waypoint_project": dataSourceProject(),
+			"waypoint_project":        dataSourceProject(),
+			"waypoint_runner_profile": dataSourceRunnerProfile(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"waypoint_project": resourceProject(),
+			"waypoint_project":        resourceProject(),
+			"waypoint_runner_profile": resourceRunnerProfile(),
 		},
 	}
 

@@ -2,6 +2,7 @@ package waypoint
 
 import (
 	"context"
+	"fmt"
 	"github.com/hashicorp-dev-advocates/waypoint-client/pkg/client"
 	gen "github.com/hashicorp-dev-advocates/waypoint-client/pkg/waypoint"
 	"github.com/hashicorp/terraform-plugin-log/tflog"
@@ -61,15 +62,15 @@ func resourceRunnerProfile() *schema.Resource {
 				ConflictsWith: []string{"target_runner_labels"},
 			},
 			"target_runner_labels": {
-				Type:          schema.TypeList,
+				Type:          schema.TypeMap,
 				Optional:      true,
-				Description:   "A list of labels on target runners",
+				Description:   "A map of labels on target runners",
 				ConflictsWith: []string{"target_runner_id"},
 				Elem: &schema.Schema{
 					Type: schema.TypeString,
 				},
 			},
-			"environment_variables": &schema.Schema{
+			"environment_variables": {
 				Type:        schema.TypeMap,
 				Optional:    true,
 				Description: "Any env vars that should be exposed to the on demand runner.",
@@ -115,28 +116,35 @@ func resourceRunnerProfileCreate(ctx context.Context, d *schema.ResourceData, m 
 		}
 	}
 
-	if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]string); ok {
-		var labels map[string]string
+	if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
+		labels := make(map[string]string)
 
 		for k, v := range targetRunnerLabels {
-			labels[k] = v
+			strKey := fmt.Sprintf("%v", k)
+			strValue := fmt.Sprintf("%v", v)
+			labels[strKey] = strValue
 		}
 
-		runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
-			Labels: &gen.Ref_RunnerLabels{
-				Labels: labels,
+		runnerConfig.TargetRunner = &gen.Ref_Runner{
+			Target: &gen.Ref_Runner_Labels{
+				Labels: &gen.Ref_RunnerLabels{
+					Labels: labels,
+				},
 			},
 		}
 	}
 
-	if environmentVariables, ok := d.Get("environment_variables").(map[string]string); ok {
-		var runnerVariables map[string]string
+	runnerVariables := make(map[string]string)
+	if environmentVariables, ok := d.Get("environment_variables").(map[string]interface{}); ok {
 
 		for k, v := range environmentVariables {
-			runnerVariables[k] = v
+			strKey := fmt.Sprintf("%v", k)
+			strValue := fmt.Sprintf("%v", v)
+			runnerVariables[strKey] = strValue
 		}
 
 		runnerConfig.EnvironmentVariables = runnerVariables
+
 	}
 
 	runnerProfile, err := wp.CreateRunnerProfile(context.TODO(), runnerConfig)
@@ -187,9 +195,100 @@ func resourceRunnerProfileRead(ctx context.Context, d *schema.ResourceData, m in
 }
 
 func resourceRunnerProfileUpdate(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return nil
+	wp := m.(*WaypointClient).conn
+
+	runnerConfig := client.DefaultRunnerConfig()
+	runnerConfig.Name = d.Get("profile_name").(string)
+	runnerConfig.Id = d.Get("id").(string)
+
+	if ociUrl, ok := d.Get("oci_url").(string); ok {
+		runnerConfig.OciUrl = ociUrl
+	}
+
+	if pluginType, ok := d.Get("plugin_type").(string); ok {
+		runnerConfig.PluginType = pluginType
+	}
+
+	if pluginConfig, ok := d.Get("plugin_config").(string); ok {
+		runnerConfig.PluginConfig = []byte(pluginConfig)
+	}
+
+	if pluginConfigFormat, ok := d.Get("plugin_config_format").(int); ok {
+		runnerConfig.ConfigFormat = pluginConfigFormat
+	}
+
+	if defaultProfile, ok := d.Get("default").(bool); ok {
+		runnerConfig.Default = defaultProfile
+	}
+
+	if targetRunnerId, ok := d.Get("target_runner_id").(string); ok {
+		runnerConfig.TargetRunner = &gen.Ref_Runner{
+			Target: &gen.Ref_Runner_Id{Id: &gen.Ref_RunnerId{
+				Id: targetRunnerId},
+			},
+		}
+	}
+
+	if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
+		labels := make(map[string]string)
+
+		for k, v := range targetRunnerLabels {
+			strKey := fmt.Sprintf("%v", k)
+			strValue := fmt.Sprintf("%v", v)
+			labels[strKey] = strValue
+		}
+
+		runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
+			Labels: &gen.Ref_RunnerLabels{
+				Labels: labels,
+			},
+		}
+	}
+
+	if environmentVariables, ok := d.Get("environment_variables").(map[string]interface{}); ok {
+		runnerVariables := make(map[string]string)
+
+		for k, v := range environmentVariables {
+			strKey := fmt.Sprintf("%v", k)
+			strValue := fmt.Sprintf("%v", v)
+			runnerVariables[strKey] = strValue
+		}
+
+		runnerConfig.EnvironmentVariables = runnerVariables
+
+	}
+
+	runnerProfile, err := wp.CreateRunnerProfile(context.TODO(), runnerConfig)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(runnerProfile.Config.Id)
+
+	tflog.Trace(ctx, "created a resource")
+
+	return resourceRunnerProfileRead(ctx, d, m)
 }
 
 func resourceRunnerProfileDelete(ctx context.Context, d *schema.ResourceData, m interface{}) diag.Diagnostics {
-	return nil
+	wp := m.(*WaypointClient).conn
+
+	runnerConfig := client.DefaultRunnerConfig()
+	runnerConfig.Name = "RESOURCE DELETED"
+	runnerConfig.Id = d.Get("id").(string)
+	runnerConfig.OciUrl = "RESOURCE DELETED"
+	runnerConfig.PluginType = "RESOURCE DELETED"
+
+	runnerProfile, err := wp.CreateRunnerProfile(context.TODO(), runnerConfig)
+
+	if err != nil {
+		return diag.FromErr(err)
+	}
+
+	d.SetId(runnerProfile.Config.Id)
+
+	tflog.Trace(ctx, "updated a resource")
+
+	return resourceRunnerProfileRead(ctx, d, m)
 }
