@@ -108,8 +108,8 @@ github.com/google/uuid v1.1.2/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+
 github.com/google/uuid v1.3.0 h1:t6JiXgmwXMjEs8VusXIJk2BXHsn+wx8BZdTaoZ5fu7I=
 github.com/google/uuid v1.3.0/go.mod h1:TIyPZe4MgqvfeYDBFedMoGGpEw/LqOeaOT+nhxU+yHo=
 github.com/grpc-ecosystem/grpc-gateway v1.16.0/go.mod h1:BDjrQk3hbvj6Nolgz8mAMFbcEtjT1g+wF4CSlocrBnw=
-github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220612142425-929b3070e504 h1:6No5CuucLqiFwVcmP8/ducMNwDJjTLymDY/dB0z1yyo=
-github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220612142425-929b3070e504/go.mod h1:/QkDX/lb3sB0s0hntPZ3FhRQNKUirf+P06T5+1E5SUQ=
+github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220614092443-25f9a4b17102 h1:x/NFvmfvd6C3jmP+TZZSIj+q7qoQwsCB8BedAN3I4Uc=
+github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220614092443-25f9a4b17102/go.mod h1:/QkDX/lb3sB0s0hntPZ3FhRQNKUirf+P06T5+1E5SUQ=
 github.com/hashicorp/errwrap v1.0.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
 github.com/hashicorp/errwrap v1.1.0 h1:OxrOeh75EUXMY8TBjag2fzXGZ40LB6IKw45YeGUDY2I=
 github.com/hashicorp/errwrap v1.1.0/go.mod h1:YH+1FKiLXxHSkmPseP+kNlulaMuP3n2brvKWEqk/Jc4=
@@ -147,8 +147,8 @@ github.com/hashicorp/terraform-exec v0.16.1 h1:NAwZFJW2L2SaCBVZoVaH8LPImLOGbPLkS
 github.com/hashicorp/terraform-exec v0.16.1/go.mod h1:aj0lVshy8l+MHhFNoijNHtqTJQI3Xlowv5EOsEaGO7M=
 github.com/hashicorp/terraform-json v0.14.0 h1:sh9iZ1Y8IFJLx+xQiKHGud6/TSUCM0N8e17dKDpqV7s=
 github.com/hashicorp/terraform-json v0.14.0/go.mod h1:5A9HIWPkk4e5aeeXIBbkcOvaZbIYnAIkEyqP2pNSckM=
-github.com/hashicorp/terraform-plugin-docs v0.10.0 h1:LwoFJ3RoKElDFhBRomsDkaEn59OUNXa92M21VCuL7Vk=
-github.com/hashicorp/terraform-plugin-docs v0.10.0/go.mod h1:47ZcsxMUJxAjGzHf+dZ9q78oYf4PeJxO1N+i5XDtXBc=
+github.com/hashicorp/terraform-plugin-docs v0.10.1 h1:jiVYfhJ/hVXDAQN2XjLK3WH1A/YHgFCrFXPpxibvmjc=
+github.com/hashicorp/terraform-plugin-docs v0.10.1/go.mod h1:47ZcsxMUJxAjGzHf+dZ9q78oYf4PeJxO1N+i5XDtXBc=
 github.com/hashicorp/terraform-plugin-go v0.9.1 h1:vXdHaQ6aqL+OF076nMSBV+JKPdmXlzG5mzVDD04WyPs=
 github.com/hashicorp/terraform-plugin-go v0.9.1/go.mod h1:ItjVSlQs70otlzcCwlPcU8FRXLdO973oYFRZwAOxy8M=
 github.com/hashicorp/terraform-plugin-log v0.4.1 h1:xpbmVhvuU3mgHzLetOmx9pkOL2rmgpu302XxddON6eo=
