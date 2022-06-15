@@ -1,17 +1,3 @@
-terraform {
-  required_providers {
-    waypoint = {
-      source  = "local/hashicorp/waypoint"
-      version = "0.1.0"
-    }
-  }
-}
-
-provider "waypoint" {
-  waypoint_addr = "localhost:9701"
-  token         = "rHhYzVXQBcK6NWBuN2DAAHsofoLBjPDJXKFwnZKxU9Xh13ShJs31muEV5YyJ97JhPyLsYQok1vYhpYqhWQisKuGf8DxuBRM9qbfXbap789YsBYGKFmkXvpdaLSM83moC139XkJ1rV5PR9Nwyxk64gHGk9CMroYvgG"
-}
-
 resource "waypoint_project" "example" {
 
   project_name           = "example"
