@@ -13,7 +13,7 @@ provider "waypoint" {
 }
 
 data "waypoint_runner_profile" "test" {
-  id = "01G5H84QTN0HZK9MJ7RQ8D349C"
+  id = "01G5K3Z29H87VRVYSJVBGQF7AM"
 }
 
 output "profile_name" {
@@ -34,4 +34,8 @@ output "plugin_type" {
 
 output "environment_variables" {
   value = data.waypoint_runner_profile.test.environment_variables
+}
+
+output "target_labels" {
+  value = data.waypoint_runner_profile.test.target_runner_labels
 }

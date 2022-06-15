@@ -108,29 +108,45 @@ func resourceRunnerProfileCreate(ctx context.Context, d *schema.ResourceData, m 
 		runnerConfig.Default = defaultProfile
 	}
 
-	if targetRunnerId, ok := d.Get("target_runner_id").(string); ok {
-		runnerConfig.TargetRunner = &gen.Ref_Runner{
-			Target: &gen.Ref_Runner_Id{Id: &gen.Ref_RunnerId{
-				Id: targetRunnerId},
-			},
+	//if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
+	//	labels := make(map[string]string)
+	//
+	//	for k, v := range targetRunnerLabels {
+	//		strKey := fmt.Sprintf("%v", k)
+	//		strValue := fmt.Sprintf("%v", v)
+	//		labels[strKey] = strValue
+	//	}
+	//
+	//	runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
+	//		Labels: &gen.Ref_RunnerLabels{
+	//			Labels: labels,
+	//		}}
+	//}
+	tRId := d.Get("target_runner_id").(string)
+	if len(tRId) > 0 {
+
+		if targetRunnerId, ok := d.Get("target_runner_id").(string); ok {
+			runnerConfig.TargetRunner = &gen.Ref_Runner{Target: &gen.Ref_Runner_Id{Id: &gen.Ref_RunnerId{Id: targetRunnerId}}}
 		}
 	}
 
-	if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
-		labels := make(map[string]string)
+	tRL := d.Get("target_runner_labels").(map[string]interface{})
 
-		for k, v := range targetRunnerLabels {
-			strKey := fmt.Sprintf("%v", k)
-			strValue := fmt.Sprintf("%v", v)
-			labels[strKey] = strValue
-		}
+	if len(tRL) > 0 {
 
-		runnerConfig.TargetRunner = &gen.Ref_Runner{
-			Target: &gen.Ref_Runner_Labels{
+		if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
+			labels := make(map[string]string)
+
+			for k, v := range targetRunnerLabels {
+				strKey := fmt.Sprintf("%v", k)
+				strValue := fmt.Sprintf("%v", v)
+				labels[strKey] = strValue
+			}
+
+			runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
 				Labels: &gen.Ref_RunnerLabels{
 					Labels: labels,
-				},
-			},
+				}}
 		}
 	}
 
@@ -179,14 +195,12 @@ func resourceRunnerProfileRead(ctx context.Context, d *schema.ResourceData, m in
 	d.Set("plugin_config_format", getRunnerProfile.Config.ConfigFormat)
 	d.Set("default", getRunnerProfile.Config.Default)
 
-	if getRunnerProfile.Config.TargetRunner.Target != nil {
-		switch getRunnerProfile.Config.TargetRunner.Target.(type) {
-		case *gen.Ref_Runner_Labels:
-			d.Set("target_runner_labels", getRunnerProfile.Config.TargetRunner.Target)
-		case *gen.Ref_Runner_Id:
-			d.Set("target_runner_id", getRunnerProfile.Config.TargetRunner.Target)
+	switch getRunnerProfile.Config.TargetRunner.Target.(type) {
+	case *gen.Ref_Runner_Labels:
+		d.Set("target_runner_labels", getRunnerProfile.Config.TargetRunner.Target.(*gen.Ref_Runner_Labels).Labels.Labels)
+	case *gen.Ref_Runner_Id:
+		d.Set("target_runner_id", getRunnerProfile.Config.TargetRunner.Target.(*gen.Ref_Runner_Id).Id.Id)
 
-		}
 	}
 
 	d.Set("environment_variables", getRunnerProfile.Config.EnvironmentVariables)
@@ -221,27 +235,31 @@ func resourceRunnerProfileUpdate(ctx context.Context, d *schema.ResourceData, m 
 		runnerConfig.Default = defaultProfile
 	}
 
-	if targetRunnerId, ok := d.Get("target_runner_id").(string); ok {
-		runnerConfig.TargetRunner = &gen.Ref_Runner{
-			Target: &gen.Ref_Runner_Id{Id: &gen.Ref_RunnerId{
-				Id: targetRunnerId},
-			},
+	tRId := d.Get("target_runner_id").(string)
+	if len(tRId) > 0 {
+
+		if targetRunnerId, ok := d.Get("target_runner_id").(string); ok {
+			runnerConfig.TargetRunner = &gen.Ref_Runner{Target: &gen.Ref_Runner_Id{Id: &gen.Ref_RunnerId{Id: targetRunnerId}}}
 		}
 	}
 
-	if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
-		labels := make(map[string]string)
+	tRL := d.Get("target_runner_labels").(map[string]interface{})
 
-		for k, v := range targetRunnerLabels {
-			strKey := fmt.Sprintf("%v", k)
-			strValue := fmt.Sprintf("%v", v)
-			labels[strKey] = strValue
-		}
+	if len(tRL) > 0 {
 
-		runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
-			Labels: &gen.Ref_RunnerLabels{
-				Labels: labels,
-			},
+		if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
+			labels := make(map[string]string)
+
+			for k, v := range targetRunnerLabels {
+				strKey := fmt.Sprintf("%v", k)
+				strValue := fmt.Sprintf("%v", v)
+				labels[strKey] = strValue
+			}
+
+			runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
+				Labels: &gen.Ref_RunnerLabels{
+					Labels: labels,
+				}}
 		}
 	}
 
