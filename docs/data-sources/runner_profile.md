@@ -17,7 +17,7 @@ A data source to read waypoint runner profiles
 
 ### Required
 
-- `id` (String) ID of runner profile.
+- `id` (String) Computed ID of runner profile.
 
 ### Read-Only
 
