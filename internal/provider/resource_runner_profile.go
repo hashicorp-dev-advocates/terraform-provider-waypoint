@@ -108,20 +108,6 @@ func resourceRunnerProfileCreate(ctx context.Context, d *schema.ResourceData, m 
 		runnerConfig.Default = defaultProfile
 	}
 
-	//if targetRunnerLabels, ok := d.Get("target_runner_labels").(map[string]interface{}); ok {
-	//	labels := make(map[string]string)
-	//
-	//	for k, v := range targetRunnerLabels {
-	//		strKey := fmt.Sprintf("%v", k)
-	//		strValue := fmt.Sprintf("%v", v)
-	//		labels[strKey] = strValue
-	//	}
-	//
-	//	runnerConfig.TargetRunner.Target = &gen.Ref_Runner_Labels{
-	//		Labels: &gen.Ref_RunnerLabels{
-	//			Labels: labels,
-	//		}}
-	//}
 	tRId := d.Get("target_runner_id").(string)
 	if len(tRId) > 0 {
 
