@@ -1,7 +1,7 @@
 resource "waypoint_project" "example" {
 
   project_name           = "example"
-  remote_runners_enabled = true
+  remote_runners_enabled = false
 
   data_source_git {
     git_url                   = "https://github.com/hashicorp/waypoint-examples"
