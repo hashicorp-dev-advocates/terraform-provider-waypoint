@@ -1,5 +1,5 @@
 resource "waypoint_runner_profile" "target_id" {
-  profile_name = "summer"
+  profile_name = "example"
   oci_url      = "hashicorp/waypoint-odr:latest"
   plugin_type  = "docker"
   default      = true
