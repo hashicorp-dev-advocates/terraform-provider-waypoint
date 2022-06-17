@@ -1,6 +1,6 @@
 name = waypoint
 organization = hashicorp-dev-advocates
-version = 0.2.1
+version = 0.2.2
 arch = darwin_amd64
 #arch = linux_amd64
 
@@ -27,16 +27,16 @@ multi_build:
 	GOOS=windows GOARCH=386 go build -o ./bin/windows_386/terraform-provider-$(name)_v$(version).exe ./main.go
 zip:
 	pwd
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_linux_arm64.zip ./bin/linux_arm64/terraform-provider-$(name)_v$(version)
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_linux_amd64.zip ./bin/linux_amd64/terraform-provider-$(name)_v$(version)
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_darwin_arm64.zip ./bin/darwin_arm64/terraform-provider-$(name)_v$(version)
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_darwin_amd64.zip ./bin/darwin_amd64/terraform-provider-$(name)_v$(version)
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_windows_amd64.zip ./bin/windows_amd64/terraform-provider-$(name)_v$(version).exe
-	zip -j ./bin/terraform-provider-$(name)_v$(version)_windows_386.zip ./bin/windows_386/terraform-provider-$(name)_v$(version).exe
+	zip -j ./bin/terraform-provider-$(name)_$(version)_linux_arm64.zip ./bin/linux_arm64/terraform-provider-$(name)_v$(version)
+	zip -j ./bin/terraform-provider-$(name)_$(version)_linux_amd64.zip ./bin/linux_amd64/terraform-provider-$(name)_v$(version)
+	zip -j ./bin/terraform-provider-$(name)_$(version)_darwin_arm64.zip ./bin/darwin_arm64/terraform-provider-$(name)_v$(version)
+	zip -j ./bin/terraform-provider-$(name)_$(version)_darwin_amd64.zip ./bin/darwin_amd64/terraform-provider-$(name)_v$(version)
+	zip -j ./bin/terraform-provider-$(name)_$(version)_windows_amd64.zip ./bin/windows_amd64/terraform-provider-$(name)_v$(version).exe
+	zip -j ./bin/terraform-provider-$(name)_$(version)_windows_386.zip ./bin/windows_386/terraform-provider-$(name)_v$(version).exe
 	ls -lha ./bin
 shasum:
-	shasum -a 256 *.zip > ./bin/terraform-provider-$(name)_v$(version)_SHA256SUMS
+	cd bin/; shasum -a 256 *.zip > terraform-provider-$(name)_$(version)_SHA256SUMS
 gpg:
-	gpg --detach-sign ./bin/terraform-provider-$(name)_v$(version)_SHA256SUMS
+	gpg --detach-sign ./bin/terraform-provider-$(name)_$(version)_SHA256SUMS
 release_package: multi_build zip shasum gpg
 
