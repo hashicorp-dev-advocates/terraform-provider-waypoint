@@ -1,8 +1,8 @@
 terraform {
   required_providers {
     waypoint = {
-      source  = "local/hashicorp/waypoint"
-      version = "0.1.0"
+      source  = "hashicorp-dev-advocates/waypoint"
+      version = "0.2.1"
     }
   }
 }

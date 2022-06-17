@@ -16,8 +16,8 @@ description: |-
 terraform {
   required_providers {
     waypoint = {
-      source  = "local/hashicorp/waypoint"
-      version = "0.1.0"
+      source  = "hashicorp-dev-advocates/waypoint"
+      version = "0.2.1"
     }
   }
 }
@@ -33,5 +33,5 @@ provider "waypoint" {
 
 ### Optional
 
-- `token` (String) Waypoint token to authenticate to Waypoint server
+- `token` (String) Waypoint token to authenticate to Waypoint server. This can be omitted if the `WAYPOINT_TOKEN` environment variable is set
 - `waypoint_addr` (String) Waypoint server address
