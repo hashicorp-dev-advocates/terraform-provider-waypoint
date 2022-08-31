@@ -33,5 +33,5 @@ provider "waypoint" {
 
 ### Optional
 
-- `token` (String) Waypoint token to authenticate to Waypoint server. This can be omitted if the `WAYPOINT_TOKEN` environment variable is set
+- `token` (String) Waypoint token to authenticate to Waypoint server
 - `waypoint_addr` (String) Waypoint server address

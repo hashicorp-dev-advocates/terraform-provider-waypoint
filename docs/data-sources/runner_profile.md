@@ -12,8 +12,8 @@ A data source to read waypoint runner profiles
 
 ## Example Usage
 
-```hcl
-data "waypoint_runner_profile" "example" {
+```terraform
+data "waypoint_runner_profile" "test" {
   id = "01G5K3Z29H87VRVYSJVBGQF7AM"
 }
 ```
@@ -23,7 +23,7 @@ data "waypoint_runner_profile" "example" {
 
 ### Required
 
-- `id` (String) ID of runner profile.
+- `id` (String) Computed ID of runner profile.
 
 ### Read-Only
 
