@@ -1,6 +1,6 @@
 name = waypoint
 organization = hashicorp-dev-advocates
-version = 0.1.0
+version = 0.3.0
 arch = darwin_amd64
 #arch = linux_amd64
 
@@ -12,6 +12,8 @@ install: build
 	mv bin/terraform-provider-$(name)_v$(version) ~/.terraform.d/plugins/local/$(organization)/$(name)/$(version)/$(arch)/
 test:
 	go test ./internal/provider -v
+docs:
+	go run github.com/hashicorp/terraform-plugin-docs/cmd/tfplugindocs
 multi_build:
 	@echo ""
 	@echo "Compile Provider"
