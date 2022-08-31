@@ -33,8 +33,9 @@ func Provider() *schema.Provider {
 			"waypoint_runner_profile": dataSourceRunnerProfile(),
 		},
 		ResourcesMap: map[string]*schema.Resource{
-			"waypoint_project":        resourceProject(),
-			"waypoint_runner_profile": resourceRunnerProfile(),
+			"waypoint_project":          resourceProject(),
+			"waypoint_runner_profile":   resourceRunnerProfile(),
+			"waypoint_auth_method_oidc": resourceAuthMethodOidc(),
 		},
 	}
 

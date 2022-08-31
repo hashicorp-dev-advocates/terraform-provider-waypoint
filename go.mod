@@ -3,7 +3,7 @@ module github.com/hashicorp-dev-advocates/terraform-provider-waypoint
 go 1.18
 
 require (
-	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220614092443-25f9a4b17102
+	github.com/hashicorp-dev-advocates/waypoint-client v0.0.0-20220802125513-67b8c0d351a1
 	github.com/hashicorp/terraform-plugin-docs v0.10.1
 	github.com/hashicorp/terraform-plugin-log v0.4.1
 	github.com/hashicorp/terraform-plugin-sdk/v2 v2.17.0
